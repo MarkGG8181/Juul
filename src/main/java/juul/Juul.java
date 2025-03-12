@@ -6,6 +6,7 @@ import juul.event.EventTick;
 import juul.font.FontUtil;
 import juul.inject.LUT;
 import juul.inject.ReflectionHelper;
+import juul.inject.VersionMapping;
 import juul.inject.WrapperManager;
 import juul.inject.wrappers.MinecraftWrapper;
 import juul.module.Manager;
@@ -54,7 +55,7 @@ public enum Juul {
         /**
          * Must be enabled for injection
          */
-        //getLookupTable().current = new VersionMapping(Version.DEV);
+        getLookupTable().current = new VersionMapping(LUT.Version.DEV);
 
         //Init Wrappers
         wrapperManager = new WrapperManager();
@@ -107,7 +108,8 @@ public enum Juul {
      * AutoClicker; Minecraft.clickMouse : 1524, 1548 [X]
      *
      *
-     * s27packetexplotion motion x, y, z made public
+     * s27packetexplosion motion x, y, z made public
+     * s12packetentityvelocity motion x, y, z made public
      */
 
 }
