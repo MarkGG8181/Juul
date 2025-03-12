@@ -55,7 +55,7 @@ public enum Juul {
         /**
          * Must be enabled for injection
          */
-        getLookupTable().current = new VersionMapping(LUT.Version.DEV);
+        //getLookupTable().current = new VersionMapping(LUT.Version.V1_8);
 
         //Init Wrappers
         wrapperManager = new WrapperManager();
