@@ -1,18 +1,31 @@
-import java.util.Arrays;
-
 import net.minecraft.client.main.Main;
 
-public class Start
-{
-    public static void main(String[] args)
-    {
-        Main.main(concat(new String[] {"--version", "1.8", "--accessToken", "0", "--assetsDir", "assets", "--assetIndex", "1.8", "--userProperties", "{}"}, args));
-    }
+import java.io.File;
 
-    public static <T> T[] concat(T[] first, T[] second)
-    {
-        T[] result = Arrays.copyOf(first, first.length + second.length);
-        System.arraycopy(second, 0, result, first.length, second.length);
-        return result;
+/**
+ * @author Liticane
+ * Allows using existing .minecraft directory during testing.
+ */
+@SuppressWarnings("ALL")
+public class Start {
+    // I am tired of copying around assets every single time.
+    public static void main(String[] args) {
+        System.setProperty("org.lwjgl.librarypath", new File("../../natives").getAbsolutePath());
+        
+        final String appdataDirectory = System.getenv("APPDATA");
+
+        File runDir = new File(appdataDirectory != null ? appdataDirectory : System.getProperty("user.home", "."), ".minecraft/");
+
+        File gameDir = new File(runDir, ".");
+        File assetsDir = new File(runDir, "assets/");
+
+        Main.main(new String[]{
+                "--version", "1.8",
+                "--accessToken", "0",
+                "--assetIndex", "1.8",
+                "--userProperties", "{}",
+                "--gameDir", gameDir.getAbsolutePath(),
+                "--assetsDir", assetsDir.getAbsolutePath()
+        });
     }
 }
