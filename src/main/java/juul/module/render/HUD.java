@@ -26,7 +26,7 @@ public class HUD extends Module {
 	        
 			//constants.drawStringWithShadow("Hey there", 10, 10, -1);
 
-			TextureImage logo = Resources.downloadTexture("https://intent.store/juul/logo.png");
+			TextureImage logo = Resources.getTexture("logo.png");
 			
 	        if(logo.pixels != null) {
 	        	//Texture bind = TextureImpl.getLastBind();

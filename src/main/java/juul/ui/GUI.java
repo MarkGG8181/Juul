@@ -489,8 +489,8 @@ public class GUI extends GuiScreen implements Utils {
         FontUtil.semibold_10.drawNoBSString(value, x + (100 * endPercent) - FontUtil.semibold_10.getStringWidth(value) / 2f, y - 9, white);
     }
 
-    public void drawImage(float x, float y, float width, float height, String url, float opacity) {
-        TextureImage logo = Resources.downloadTexture("https://intent.store/juul/" + url);
+    public void drawImage(float x, float y, float width, float height, String imageName, float opacity) {
+        TextureImage logo = Resources.getTexture(imageName);
 
         if (logo.pixels != null) {
             TextureImpl.bindNone();
@@ -502,8 +502,8 @@ public class GUI extends GuiScreen implements Utils {
         }
     }
 
-    public void drawSprite(float x, float y, float offsetX, float offsetY, float textureWidth, float textureHeight, float width, float height, String url) {
-        TextureImage logo = Resources.downloadTexture("https://intent.store/juul/" + url);
+    public void drawSprite(float x, float y, float offsetX, float offsetY, float textureWidth, float textureHeight, float width, float height, String imageName) {
+        TextureImage logo = Resources.getTexture(imageName);
 
         if (logo.pixels != null) {
             TextureImpl.bindNone();
@@ -652,7 +652,9 @@ public class GUI extends GuiScreen implements Utils {
                     }
 
                     //Handle Slider
-                    //drawSlider(moduleLeft + xPos, moduleTop + yPos - 3.5f, white, yPos, xPos, numberSetting);
+                    int white = new Color(1f, 1f, 1f, introTrans.getPosition()).getRGB();
+
+                    drawSlider(moduleLeft + xPos, moduleTop + yPos - 3.5f, white, yPos, xPos, numberSetting);
 
                     yPos += 15.5f;
                 }
