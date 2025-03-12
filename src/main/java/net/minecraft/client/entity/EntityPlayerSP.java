@@ -165,9 +165,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
     	EventMotion motion = new EventMotion(posX, minY, posZ, yaw, pitch, onGround).fire();
 
     	this.posX = motion.getX();
-    	if(Juul.INSTANCE != null)
-    		Juul.INSTANCE.getReflectionHelper().setFinalStatic("minY", this.getEntityBoundingBox(), motion.getY());
-
     	this.posZ = motion.getZ();
     	this.rotationYaw = motion.getYaw();
     	this.rotationPitch = motion.getPitch();
@@ -261,9 +258,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
         motion.post().fire();
 
     	this.posX = posX;
-    	if(Juul.INSTANCE != null)
-    		Juul.INSTANCE.getReflectionHelper().setFinalStatic("minY", this.getEntityBoundingBox(), minY);
-
     	this.posZ = posZ;
     	this.rotationYaw = yaw;
     	this.rotationPitch = pitch;
