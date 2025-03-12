@@ -116,8 +116,8 @@ public enum ModelRotation implements IModelState, ITransformation
         return (ModelRotation)field_177546_q.get(Integer.valueOf(func_177521_b(MathHelper.func_180184_b(p_177524_0_, 360), MathHelper.func_180184_b(p_177524_1_, 360))));
     }
 
-    public TRSRTransformation apply(IModelPart part)
-    {
+    @Override
+    public TRSRTransformation apply(IModelPart part) {
         return new TRSRTransformation(this.getMatrix());
     }
 
@@ -134,11 +134,6 @@ public enum ModelRotation implements IModelState, ITransformation
     public int rotate(EnumFacing facing, int vertexIndex)
     {
         return this.func_177520_a(facing, vertexIndex);
-    }
-
-    public IModelPart apply(Object x0)
-    {
-        return (IModelPart) this.apply((IModelPart)x0);
     }
 
     static {
