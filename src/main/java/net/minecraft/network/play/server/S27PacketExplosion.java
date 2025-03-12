@@ -18,9 +18,9 @@ public class S27PacketExplosion implements Packet
     private double field_149157_c;
     private float field_149154_d;
     private List field_149155_e;
-    private float field_149152_f;
-    private float field_149153_g;
-    private float field_149159_h;
+    public float field_149152_f;
+    public float field_149153_g;
+    public float field_149159_h;
     private static final String __OBFID = "CL_00001300";
 
     public S27PacketExplosion() {}

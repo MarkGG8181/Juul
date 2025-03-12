@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
+
+import juul.event.EventReach;
+import juul.event.EventRender;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -453,38 +456,40 @@ public class EntityRenderer implements IResourceManagerReloadListener
         {
             this.mc.mcProfiler.startSection("pick");
             this.mc.pointedEntity = null;
-            double var3 = (double)this.mc.playerController.getBlockReachDistance();
-            this.mc.objectMouseOver = var2.func_174822_a(var3, p_78473_1_);
-            double var5 = var3;
+            double reach = (double)this.mc.playerController.getBlockReachDistance();
+            this.mc.objectMouseOver = var2.func_174822_a(reach, p_78473_1_);
+            double reachCopy = reach;
             Vec3 var7 = var2.func_174824_e(p_78473_1_);
 
             if (this.mc.playerController.extendedReach())
             {
-                var3 = 6.0D;
-                var5 = 6.0D;
+                reach = 6.0D;
+                reachCopy = 6.0D;
             }
             else
             {
-                if (var3 > 3.0D)
+                if (reach > 3.0D)
                 {
-                    var5 = 3.0D;
+                    reachCopy = 3.0D;
                 }
 
-                var3 = var5;
+                reach = reachCopy;
             }
+
+            reach = reachCopy = new EventReach((float)reach).fire().getDistance();
 
             if (this.mc.objectMouseOver != null)
             {
-                var5 = this.mc.objectMouseOver.hitVec.distanceTo(var7);
+                reachCopy = this.mc.objectMouseOver.hitVec.distanceTo(var7);
             }
 
             Vec3 var8 = var2.getLook(p_78473_1_);
-            Vec3 var9 = var7.addVector(var8.xCoord * var3, var8.yCoord * var3, var8.zCoord * var3);
+            Vec3 var9 = var7.addVector(var8.xCoord * reach, var8.yCoord * reach, var8.zCoord * reach);
             this.pointedEntity = null;
             Vec3 var10 = null;
             float var11 = 1.0F;
-            List var12 = this.mc.theWorld.getEntitiesWithinAABBExcludingEntity(var2, var2.getEntityBoundingBox().addCoord(var8.xCoord * var3, var8.yCoord * var3, var8.zCoord * var3).expand((double)var11, (double)var11, (double)var11));
-            double var13 = var5;
+            List var12 = this.mc.theWorld.getEntitiesWithinAABBExcludingEntity(var2, var2.getEntityBoundingBox().addCoord(var8.xCoord * reach, var8.yCoord * reach, var8.zCoord * reach).expand((double)var11, (double)var11, (double)var11));
+            double var13 = reachCopy;
 
             for (int var15 = 0; var15 < var12.size(); ++var15)
             {
@@ -537,7 +542,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 }
             }
 
-            if (this.pointedEntity != null && (var13 < var5 || this.mc.objectMouseOver == null))
+            if (this.pointedEntity != null && (var13 < reachCopy || this.mc.objectMouseOver == null))
             {
                 this.mc.objectMouseOver = new MovingObjectPosition(this.pointedEntity, var10);
 
@@ -1900,6 +1905,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
             this.mc.mcProfiler.endStartSection("forge_render_last");
             Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast, new Object[] {var5, Float.valueOf(partialTicks)});
         }
+
+        new EventRender().fire();
 
         this.mc.mcProfiler.endStartSection("hand");
         boolean handRendered = Reflector.callBoolean(Reflector.ForgeHooksClient_renderFirstPersonHand, new Object[] {this.mc.renderGlobal, Float.valueOf(partialTicks), Integer.valueOf(pass)});

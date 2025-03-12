@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Random;
+
+import juul.event.EventHUD;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -198,6 +200,8 @@ public class GuiIngame extends Gui
             GlStateManager.enableDepth();
             this.mc.mcProfiler.endSection();
         }
+
+        new EventHUD(var2.getScaledWidth(), var2.getScaledHeight()).fire();
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         var11 = var3 / 2 - 91;

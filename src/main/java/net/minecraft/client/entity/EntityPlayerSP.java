@@ -1,5 +1,8 @@
 package net.minecraft.client.entity;
 
+import juul.Juul;
+import juul.event.EventMotion;
+import juul.event.EventUpdate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -150,6 +153,26 @@ public class EntityPlayerSP extends AbstractClientPlayer
 
     public void func_175161_p()
     {
+        double posX = this.posX,
+    		   minY = this.getEntityBoundingBox().minY,
+    		   posZ = this.posZ;
+
+    	float yaw = this.rotationYaw,
+    		  pitch = this.rotationPitch;
+
+    	boolean onGround = this.onGround;
+
+    	EventMotion motion = new EventMotion(posX, minY, posZ, yaw, pitch, onGround).fire();
+
+    	this.posX = motion.getX();
+    	if(Juul.INSTANCE != null)
+    		Juul.INSTANCE.getReflectionHelper().setFinalStatic("minY", this.getEntityBoundingBox(), motion.getY());
+
+    	this.posZ = motion.getZ();
+    	this.rotationYaw = motion.getYaw();
+    	this.rotationPitch = motion.getPitch();
+    	this.onGround = motion.isOnGround();
+
         boolean var1 = this.isSprinting();
 
         if (var1 != this.field_175171_bO)
@@ -233,6 +256,18 @@ public class EntityPlayerSP extends AbstractClientPlayer
                 this.field_175165_bM = this.rotationPitch;
             }
         }
+
+
+        motion.post().fire();
+
+    	this.posX = posX;
+    	if(Juul.INSTANCE != null)
+    		Juul.INSTANCE.getReflectionHelper().setFinalStatic("minY", this.getEntityBoundingBox(), minY);
+
+    	this.posZ = posZ;
+    	this.rotationYaw = yaw;
+    	this.rotationPitch = pitch;
+    	this.onGround = onGround;
     }
 
     /**
@@ -667,6 +702,8 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onLivingUpdate()
     {
+        EventUpdate update = new EventUpdate().fire();
+
         if (this.sprintingTicksLeft > 0)
         {
             --this.sprintingTicksLeft;
@@ -859,5 +896,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             this.capabilities.isFlying = false;
             this.sendPlayerAbilities();
         }
+
+        update.post().fire();
     }
 }

@@ -1,5 +1,6 @@
 package net.minecraft.client.multiplayer;
 
+import juul.event.EventReach;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -340,7 +341,9 @@ public class PlayerControllerMP
      */
     public float getBlockReachDistance()
     {
-        return this.currentGameType.isCreative() ? 5.0F : 4.5F;
+        float distance = currentGameType.isCreative() ? 5.0F : 4.5F;
+
+        return new EventReach(distance).fire().getDistance();
     }
 
     public void updateController()

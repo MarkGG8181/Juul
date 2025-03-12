@@ -36,6 +36,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import javax.imageio.ImageIO;
+
+import juul.Juul;
+import juul.event.EventClickMouse;
+import juul.event.EventKey;
+import juul.event.EventTick;
+import juul.module.combat.AutoClicker;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.audio.MusicTicker;
@@ -551,6 +557,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
         this.checkGLError("Post startup");
         this.ingameGUI = new GuiIngame(this);
+
+        Juul.INSTANCE.init();
 
         if (this.serverName != null)
         {
@@ -1503,6 +1511,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
     private void clickMouse()
     {
+        EventClickMouse e = new EventClickMouse();
         if (this.leftClickCounter <= 0)
         {
             this.thePlayer.swingItem();
@@ -1511,7 +1520,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 logger.error("Null returned as \'hitResult\', this shouldn\'t happen!");
 
-                if (this.playerController.isNotCreative())
+                if ((Juul.INSTANCE != null ? !Juul.INSTANCE.manager.getModule(AutoClicker.class).isEnabled() : true) && this.playerController.isNotCreative())
                 {
                     this.leftClickCounter = 10;
                 }
@@ -1522,6 +1531,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 {
                     case 1:
                         this.playerController.attackEntity(this.thePlayer, this.objectMouseOver.entityHit);
+                        e.setEventData(true, this.objectMouseOver.entityHit);
                         break;
 
                     case 2:
@@ -1530,17 +1540,19 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                         if (this.theWorld.getBlockState(var1).getBlock().getMaterial() != Material.air)
                         {
                             this.playerController.func_180511_b(var1, this.objectMouseOver.field_178784_b);
+                            e.setEventData(false, null);
                             break;
                         }
 
                     case 3:
                     default:
-                        if (this.playerController.isNotCreative())
+                        if (!Juul.INSTANCE.manager.getModule(AutoClicker.class).isEnabled() && this.playerController.isNotCreative())
                         {
                             this.leftClickCounter = 10;
                         }
                 }
             }
+            e.fire();
         }
     }
 
@@ -1719,6 +1731,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         if (!this.isGamePaused)
         {
             this.ingameGUI.updateTick();
+            new EventTick().fire();
         }
 
         this.mcProfiler.endSection();
@@ -1926,6 +1939,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else
                     {
+                        new EventKey(var1).fire();
+
                         if (var1 == 1)
                         {
                             this.displayInGameMenu();
